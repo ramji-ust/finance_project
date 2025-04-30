@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Recurring Deposit Calculator</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="monthly_deposit">Monthly Deposit:</label>
+    <input type="number" name="monthly_deposit" step="0.01" required><br><br>
+
+    <label for="rate">Annual Interest Rate (%):</label>
+    <input type="number" name="rate" step="0.01" required><br><br>
+
+    <label for="tenure">Tenure (Years):</label>
+    <input type="number" name="tenure" required><br><br>
+
+    <input type="submit" value="Calculate RD Maturity">
+</form>
+
+{% if result %}
+    <h3>Maturity Value: ₹{{ result }}</h3>
+{% endif %}
+
+{% if error %}
+    <p style="color: red;">Error: {{ error }}</p>
+{% endif %}
+{% endblock %}

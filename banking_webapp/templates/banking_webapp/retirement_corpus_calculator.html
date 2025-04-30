@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Retirement Corpus Estimator</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <label for="monthly_savings">Monthly Savings:</label>
+    <input type="number" name="monthly_savings" step="0.01" required><br><br>
+
+    <label for="rate">Annual Interest Rate (%):</label>
+    <input type="number" name="rate" step="0.01" required><br><br>
+
+    <label for="tenure">Tenure (Years):</label>
+    <input type="number" name="tenure" required><br><br>
+
+    <input type="submit" value="Estimate Retirement Corpus">
+</form>
+
+{% if result %}
+    <h3>Estimated Retirement Corpus: ₹{{ result }}</h3>
+{% endif %}
+
+{% if error %}
+    <p style="color: red;">Error: {{ error }}</p>
+{% endif %}
+{% endblock %}

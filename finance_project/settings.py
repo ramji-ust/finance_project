@@ -31,13 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'banking_webapp',  # Custom banking app
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'banking_webapp',  # Custom banking app
 ]
 
 MIDDLEWARE = [
@@ -122,3 +122,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#login settings
+LOGIN_URL = 'login'  # URL name for @login_required redirection
+LOGIN_REDIRECT_URL = 'dashboard'  # After successful login
+LOGOUT_REDIRECT_URL = 'login'  # After logout
