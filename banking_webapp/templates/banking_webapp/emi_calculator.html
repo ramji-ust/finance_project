@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>EMI Calculator</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="principal">Loan Amount (₹)</label>
+    <input type="number" step="0.01" name="principal" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label for="rate">Annual Interest Rate (%)</label>
+    <input type="number" step="0.01" name="rate" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label for="tenure">Loan Tenure (Years)</label>
+    <input type="number" name="tenure" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Calculate EMI</button>
+</form>
+
+{% if emi %}
+  <div class="alert alert-success mt-4">
+    <strong>Your EMI:</strong> ₹{{ emi }}
+  </div>
+{% elif error %}
+  <div class="alert alert-danger mt-4">
+    {{ error }}
+  </div>
+{% endif %}
+{% endblock %}

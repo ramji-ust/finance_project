@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'banking_webapp',  # Custom banking app
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+        'DIRS': [BASE_DIR / 'templates'],  # Add this line
     },
 ]
 
