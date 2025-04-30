@@ -1,54 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Finance App</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Finance App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-<a class="navbar-brand text-white" href="{% url 'dashboard_view' %}">Finance App</a>
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-<span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarNav">
-<ul class="navbar-nav ms-auto">
- 
-        <li class="nav-item">
-<a class="nav-link" href="{% url 'dashboard_view' %}">Dashboard</a>
-</li>
- 
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+    <a class="navbar-brand text-white" href="{% url 'dashboard_view' %}">Finance App</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <!-- Unified Dropdown Menu -->
         <li class="nav-item dropdown">
-<a class="nav-link dropdown-toggle" href="#" id="toolsDropdown" role="button" data-bs-toggle="dropdown">
-            Financial Tools
-</a>
-<ul class="dropdown-menu dropdown-menu-end">
-<li class="nav-item"><a class="nav-link" href="{% url 'emi_calculator_view' %}">EMI</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'sip_tool' %}">SIP</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'fd_calculator_view' %}">FD</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'rd_calculator_view' %}">RD</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'retirement_corpus_view' %}">Retirement</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'home_loan_tool' %}">Home Loan</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'credit_card_tool' %}">Credit Card</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'taxable_income_tool' %}">Taxable Income</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'budget_planner_tool' %}">Budget Planner</a></li>
-<li class="nav-item"><a class="nav-link" href="{% url 'net_worth_tool' %}">Net Worth Calculator</a></li>
-</ul>
-</li>
- 
-        <li class="nav-item">
-<a class="nav-link" href="{% url 'logout' %}">Logout</a>
-</li>
- 
+          <a class="nav-link dropdown-toggle" href="#" id="mainMenuDropdown" role="button" data-bs-toggle="dropdown">
+            Menu
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{% url 'dashboard_view' %}">Dashboard</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'emi_calculator_view' %}">EMI Calculator</a></li>
+            <li><a class="dropdown-item" href="{% url 'sip_tool' %}">SIP Calculator</a></li>
+            <li><a class="dropdown-item" href="{% url 'fd_calculator_view' %}">FD Calculator</a></li>
+            <li><a class="dropdown-item" href="{% url 'rd_calculator_view' %}">RD Calculator</a></li>
+            <li><a class="dropdown-item" href="{% url 'retirement_corpus_view' %}">Retirement Corpus</a></li>
+            <li><a class="dropdown-item" href="{% url 'home_loan_tool' %}">Home Loan Calculator</a></li>
+            <li><a class="dropdown-item" href="{% url 'credit_card_tool' %}">Credit Card Calculator</a></li>
+            <li><a class="dropdown-item" href="{% url 'taxable_income_tool' %}">Taxable Income</a></li>
+            <li><a class="dropdown-item" href="{% url 'budget_planner_tool' %}">Budget Planner</a></li>
+            <li><a class="dropdown-item" href="{% url 'net_worth_tool' %}">Net Worth Calculator</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
+          </ul>
+        </li>
       </ul>
-</div>
-</nav>
- 
+    </div>
+  </nav>
+
   <div class="container mt-4">
     {% block content %}
     {% endblock %}
-</div>
- 
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
