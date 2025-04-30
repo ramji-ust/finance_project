@@ -1,47 +1,83 @@
 {% extends 'base.html' %}
- 
+
 {% block content %}
 <div class="card mb-4">
-<div class="card-header bg-primary text-white">
-    Welcome, {{ account.user.username }}
-</div>
-<div class="card-body">
-<p><strong>Account Number:</strong> {{ account.account_number }}</p>
-<p><strong>Current Balance:</strong> ₹{{ account.balance }}</p>
-    {% if message %}
-<div class="alert alert-info">{{ message }}</div>
-    {% endif %}
-</div>
-</div>
- 
-<div class="row mb-4">
-<div class="col-md-6">
-<div class="card">
-<div class="card-header">Deposit</div>
-<div class="card-body">
-<form method="post">
-          {% csrf_token %}
-          {{ deposit_form.as_p }}
-<button type="submit" name="deposit" class="btn btn-success">Deposit</button>
-</form>
-</div>
-</div>
-</div>
- 
-  <div class="col-md-6">
-<div class="card">
-<div class="card-header">Withdraw</div>
-<div class="card-body">
-<form method="post">
-          {% csrf_token %}
-          {{ withdraw_form.as_p }}
-<button type="submit" name="withdraw" class="btn btn-danger">Withdraw</button>
-</form>
-</div>
-</div>
-</div>
+    <div class="card-header bg-primary text-white">
+        Welcome, {{ account.user.username }}
+    </div>
+    <div class="card-body">
+        <p><strong>Account Number:</strong> {{ account.account_number }}</p>
+        <p><strong>Current Balance:</strong> ₹{{ account.balance }}</p>
+        {% if message %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endif %}
+    </div>
 </div>
 
+<!-- Deposit and Withdraw Section -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Deposit</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ deposit_form.as_p }}
+                    <button type="submit" name="deposit" class="btn btn-success">Deposit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">Withdraw</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {{ withdraw_form.as_p }}
+                    <button type="submit" name="withdraw" class="btn btn-danger">Withdraw</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Transaction History Section -->
+<div class="card">
+    <div class="card-header bg-secondary text-white">Transaction History</div>
+    <div class="card-body">
+        {% if account.transactions.all %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Transaction Type</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in account.transactions.all %}
+                        <tr>
+                            <td>{{ transaction.transaction_type|title }}</td>
+                            <td>₹{{ transaction.amount }}</td>
+                            <td>{{ transaction.timestamp|date:"Y-m-d H:i" }}</td>
+                            <td>
+                                {% if transaction.description %}
+                                    {{ transaction.description }}
+                                {% else %}
+                                    No description available
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No transactions found.</p>
+        {% endif %}
+    </div>
 </div>
+
 {% endblock %}

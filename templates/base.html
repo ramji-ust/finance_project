@@ -14,28 +14,38 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <!-- Unified Dropdown Menu -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="mainMenuDropdown" role="button" data-bs-toggle="dropdown">
-            Menu
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="{% url 'dashboard_view' %}">Dashboard</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{% url 'emi_calculator_view' %}">EMI Calculator</a></li>
-            <li><a class="dropdown-item" href="{% url 'sip_tool' %}">SIP Calculator</a></li>
-            <li><a class="dropdown-item" href="{% url 'fd_calculator_view' %}">FD Calculator</a></li>
-            <li><a class="dropdown-item" href="{% url 'rd_calculator_view' %}">RD Calculator</a></li>
-            <li><a class="dropdown-item" href="{% url 'retirement_corpus_view' %}">Retirement Corpus</a></li>
-            <li><a class="dropdown-item" href="{% url 'home_loan_tool' %}">Home Loan Calculator</a></li>
-            <li><a class="dropdown-item" href="{% url 'credit_card_tool' %}">Credit Card Calculator</a></li>
-            <li><a class="dropdown-item" href="{% url 'taxable_income_tool' %}">Taxable Income</a></li>
-            <li><a class="dropdown-item" href="{% url 'budget_planner_tool' %}">Budget Planner</a></li>
-            <li><a class="dropdown-item" href="{% url 'net_worth_tool' %}">Net Worth Calculator</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
-          </ul>
-        </li>
+        {% if user.is_authenticated %}
+          <!-- Unified Dropdown Menu for Logged-in Users -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="mainMenuDropdown" role="button" data-bs-toggle="dropdown">
+              Menu
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="mainMenuDropdown">
+              <li><a class="dropdown-item" href="{% url 'dashboard_view' %}">Dashboard</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{% url 'emi_calculator_view' %}">EMI Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'sip_tool' %}">SIP Tool</a></li>
+              <li><a class="dropdown-item" href="{% url 'fd_calculator_view' %}">FD Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'rd_calculator_view' %}">RD Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'retirement_corpus_view' %}">Retirement Corpus</a></li>
+              <li><a class="dropdown-item" href="{% url 'home_loan_tool' %}">Home Loan Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'credit_card_tool' %}">Credit Card Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'taxable_income_tool' %}">Taxable Income</a></li>
+              <li><a class="dropdown-item" href="{% url 'budget_planner_tool' %}">Budget Planner</a></li>
+              <li><a class="dropdown-item" href="{% url 'net_worth_tool' %}">Net Worth Calculator</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+          </li>
+        {% else %}
+          <!-- Links for Unauthenticated Users -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register_view' %}">Register</a>
+          </li>
+        {% endif %}
       </ul>
     </div>
   </nav>
