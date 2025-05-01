@@ -6,7 +6,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import BankAccount  # ✅ Make sure you have this model
+from .models import BankAccount, Transaction, UserProfile
+
+import joblib
+import numpy as np
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
  
 # ----- AUTHENTICATION -----
  
@@ -15,32 +20,44 @@ def register_view(request):
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
- 
+        account_number = request.POST['account_number']
+
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already taken')
-            return redirect('register')
- 
+            return render(request, 'auth/register.html')
+
+        if UserProfile.objects.filter(account_number=account_number).exists():
+            messages.error(request, 'Account number already in use')
+            return render(request, 'auth/register.html')
+
         user = User.objects.create_user(username=username, email=email, password=password)
-        BankAccount.objects.create(user=user, account_number=f"AC{user.id}", balance=0)  # Create a blank account
-        messages.success(request, 'Registration successful! Please login.')
+        UserProfile.objects.create(user=user, account_number=account_number)
+
+        messages.success(request, 'Registration successful! Please log in.')
         return redirect('login')
- 
+
     return render(request, 'auth/register.html')
- 
  
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
- 
+        account_number = request.POST['account_number']
+
         user = authenticate(request, username=username, password=password)
- 
         if user is not None:
-            login(request, user)
-            return redirect('dashboard_view')
+            try:
+                profile = UserProfile.objects.get(user=user)
+                if profile.account_number == account_number:
+                    login(request, user)
+                    return redirect('dashboard_view')
+                else:
+                    messages.error(request, 'Incorrect account number.')
+            except UserProfile.DoesNotExist:
+                messages.error(request, 'User profile not found.')
         else:
-            messages.error(request, 'Invalid credentials')
- 
+            messages.error(request, 'Invalid username or password.')
+
     return render(request, 'auth/login.html')
  
  
@@ -53,46 +70,54 @@ def logout_view(request):
  
 @login_required(login_url='login')
 def dashboard_view(request):
-    try:
-        account = BankAccount.objects.get(user=request.user)
-    except BankAccount.DoesNotExist:
-        messages.error(request, "Bank account not found.")
-        return redirect('logout')
- 
+    # Get or create the user's bank account
+    account, created = BankAccount.objects.get_or_create(user=request.user)
+
+    # Initialize messages and forms
+    message = ''
     deposit_form = DepositForm()
     withdraw_form = WithdrawForm()
-    message = ""
- 
-    if request.method == "POST":
-        if "deposit" in request.POST:
+
+    # Handle POST request for deposit or withdrawal
+    if request.method == 'POST':
+        if 'deposit' in request.POST:
             deposit_form = DepositForm(request.POST)
             if deposit_form.is_valid():
                 amount = deposit_form.cleaned_data['amount']
                 account.balance += amount
                 account.save()
-                message = f"₹{amount} deposited successfully."
-        elif "withdraw" in request.POST:
+                Transaction.objects.create(account=account, transaction_type='deposit', amount=amount)
+                message = f"₹{amount} deposited successfully!"
+
+        elif 'withdraw' in request.POST:
             withdraw_form = WithdrawForm(request.POST)
             if withdraw_form.is_valid():
                 amount = withdraw_form.cleaned_data['amount']
-                if amount <= account.balance:
+                if account.balance >= amount:
                     account.balance -= amount
                     account.save()
-                    message = f"₹{amount} withdrawn successfully."
+                    Transaction.objects.create(account=account, transaction_type='withdraw', amount=amount)
+                    message = f"₹{amount} withdrawn successfully!"
                 else:
-                    message = "Insufficient balance."
- 
+                    message = "Insufficient balance for withdrawal."
+
+    # Get recent transactions
+    transactions = account.transactions.order_by('-timestamp')[:10]
+
     context = {
-        "account": account,
-        "deposit_form": deposit_form,
-        "withdraw_form": withdraw_form,
-        "message": message,
+        'account': account,
+        'deposit_form': deposit_form,
+        'withdraw_form': withdraw_form,
+        'transactions': transactions,
+        'message': message,
     }
-    return render(request, "banking_webapp/dashboard.html", context)
+
+    return render(request, 'banking_webapp/dashboard.html', context)
  
  
 # ----- FINANCE TOOLS -----
- 
+
+@login_required(login_url='login')
 def emi_calculator_view(request):
     emi = None
     error = None
@@ -106,7 +131,7 @@ def emi_calculator_view(request):
             error = str(e)
     return render(request, "banking_webapp/emi_calculator.html", {"emi": emi, "error": error})
  
- 
+@login_required(login_url='login')
 def sip_tool(request):
     result = None
     if request.method == 'POST':
@@ -116,7 +141,7 @@ def sip_tool(request):
         result = calculate_sip(monthly_investment, annual_rate, tenure_years)
     return render(request, 'banking_webapp/sip_calculator.html', {'result': result})
  
- 
+@login_required(login_url='login')
 def fd_calculator_view(request):
     result = None
     error = None
@@ -130,7 +155,7 @@ def fd_calculator_view(request):
             error = str(e)
     return render(request, "banking_webapp/fd_calculator.html", {"result": result, "error": error})
  
- 
+@login_required(login_url='login') 
 def rd_calculator_view(request):
     result = None
     error = None
@@ -144,7 +169,7 @@ def rd_calculator_view(request):
             error = str(e)
     return render(request, "banking_webapp/rd_calculator.html", {"result": result, "error": error})
  
- 
+@login_required(login_url='login') 
 def retirement_corpus_view(request):
     result = None
     error = None
@@ -158,7 +183,7 @@ def retirement_corpus_view(request):
             error = str(e)
     return render(request, "banking_webapp/retirement_corpus_calculator.html", {"result": result, "error": error})
  
- 
+@login_required(login_url='login') 
 def home_loan_tool(request):
     result = None
     if request.method == 'POST':
@@ -169,7 +194,7 @@ def home_loan_tool(request):
         result = estimate_home_loan_eligibility(income, expenses, loan_term_years, interest_rate)
     return render(request, 'banking_webapp/home_loan.html', {'result': result})
  
- 
+@login_required(login_url='login')
 def credit_card_tool(request):
     result = None
     if request.method == 'POST':
@@ -179,7 +204,7 @@ def credit_card_tool(request):
         result = calculate_credit_card_balance(balance, annual_rate, min_payment_percent)
     return render(request, 'banking_webapp/credit_card.html', {'result': result})
  
- 
+@login_required(login_url='login') 
 def taxable_income_tool(request):
     result = None
     if request.method == 'POST':
@@ -188,7 +213,7 @@ def taxable_income_tool(request):
         result = calculate_taxable_income(gross_income, deductions)
     return render(request, 'banking_webapp/taxable_income.html', {'result': result})
  
- 
+@login_required(login_url='login') 
 def budget_planner_tool(request):
     result = None
     if request.method == 'POST':
@@ -197,7 +222,7 @@ def budget_planner_tool(request):
         result = plan_budget(income, expenses)
     return render(request, 'banking_webapp/budget_planner.html', {'result': result})
  
- 
+@login_required(login_url='login')
 def net_worth_tool(request):
     result = None
     if request.method == 'POST':
@@ -219,3 +244,25 @@ def net_worth_tool(request):
         result = calculate_net_worth(assets, liabilities)
  
     return render(request, 'banking_webapp/net_worth.html', {'result': result})
+
+# Load model
+model = joblib.load("ml_model/loan_model.pkl")
+
+@login_required
+def loan_prediction_view(request):
+    predicted_amount = None
+    if request.method == "POST":
+        try:
+            age = int(request.POST['age'])
+            income = float(request.POST['monthly_income'])
+            score = int(request.POST['credit_score'])
+            tenure = int(request.POST['loan_tenure'])
+            existing = float(request.POST['existing_loan'])
+            dependents = int(request.POST['dependents'])
+
+            features = np.array([[age, income, score, tenure, existing, dependents]])
+            predicted_amount = model.predict(features)[0]
+        except Exception as e:
+            predicted_amount = f"Error: {e}"
+
+    return render(request, "banking_webapp/loan_predictor.html", {"prediction": predicted_amount})
