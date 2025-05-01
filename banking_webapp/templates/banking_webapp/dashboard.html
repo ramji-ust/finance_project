@@ -56,7 +56,6 @@
                             <th>Transaction Type</th>
                             <th>Amount</th>
                             <th>Date</th>
-                            <th>Description</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -65,13 +64,7 @@
                                 <td>{{ transaction.transaction_type|title }}</td>
                                 <td>₹{{ transaction.amount }}</td>
                                 <td>{{ transaction.timestamp|date:"Y-m-d H:i" }}</td>
-                                <td>
-                                    {% if transaction.description %}
-                                        {{ transaction.description }}
-                                    {% else %}
-                                        No description available
-                                    {% endif %}
-                                </td>
+                               
                             </tr>
                         {% endfor %}
                     </tbody>
