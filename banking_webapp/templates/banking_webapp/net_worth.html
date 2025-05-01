@@ -1,48 +1,62 @@
 {% extends 'base.html' %}
- 
+
 {% block content %}
-<h2 class="mb-4">Net Worth Calculator</h2>
- 
-<form method="post" class="card p-4 shadow-sm">
+<div class="container mt-5">
+  <h2 class="mb-4">Net Worth Calculator</h2>
+
+  <form method="post" class="card p-4 shadow-sm">
     {% csrf_token %}
- 
-    <h5>Assets</h5>
-<div id="assets">
-<div class="row mb-2">
-<div class="col"><input type="text" name="asset_name" class="form-control" placeholder="Asset Name"></div>
-<div class="col"><input type="number" name="asset_value" class="form-control" placeholder="Value"></div>
+
+    <h5 class="mb-3">Assets</h5>
+    <div id="assets">
+      <div class="row mb-2">
+        <div class="col">
+          <input type="text" name="asset_name" class="form-control" placeholder="Asset Name" required>
+        </div>
+        <div class="col">
+          <input type="number" name="asset_value" class="form-control" placeholder="Value (₹)" required>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-outline-secondary btn-sm mb-3" onclick="addField('assets', 'asset')">Add Asset</button>
+
+    <h5 class="mb-3">Liabilities</h5>
+    <div id="liabilities">
+      <div class="row mb-2">
+        <div class="col">
+          <input type="text" name="liability_name" class="form-control" placeholder="Liability Name" required>
+        </div>
+        <div class="col">
+          <input type="number" name="liability_value" class="form-control" placeholder="Value (₹)" required>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="btn btn-outline-secondary btn-sm mb-3" onclick="addField('liabilities', 'liability')">Add Liability</button>
+
+    <button type="submit" class="btn btn-primary w-100">Calculate Net Worth</button>
+  </form>
+
+  {% if result is not None %}
+    <div class="alert alert-success mt-4">
+      <strong>Net Worth:</strong> ₹{{ result }}
+    </div>
+  {% endif %}
 </div>
-</div>
-<button type="button" class="btn btn-outline-secondary btn-sm mb-3" onclick="addField('assets', 'asset')">Add Asset</button>
- 
-    <h5>Liabilities</h5>
-<div id="liabilities">
-<div class="row mb-2">
-<div class="col"><input type="text" name="liability_name" class="form-control" placeholder="Liability Name"></div>
-<div class="col"><input type="number" name="liability_value" class="form-control" placeholder="Value"></div>
-</div>
-</div>
-<button type="button" class="btn btn-outline-secondary btn-sm mb-3" onclick="addField('liabilities', 'liability')">Add Liability</button>
- 
-    <button type="submit" class="btn btn-primary">Calculate Net Worth</button>
-</form>
- 
-{% if result is not None %}
-<div class="alert alert-success mt-4">
-<strong>Net Worth:</strong> ₹{{ result }}
-</div>
-{% endif %}
- 
+
 <script>
 function addField(sectionId, type) {
-    const container = document.getElementById(sectionId);
-    const row = document.createElement('div');
-    row.className = 'row mb-2';
-    row.innerHTML = `
-<div class="col"><input type="text" name="${type}_name" class="form-control" placeholder="${type.charAt(0).toUpperCase() + type.slice(1)} Name"></div>
-<div class="col"><input type="number" name="${type}_value" class="form-control" placeholder="Value"></div>
-    `;
-    container.appendChild(row);
+  const container = document.getElementById(sectionId);
+  const row = document.createElement('div');
+  row.className = 'row mb-2';
+  row.innerHTML = `
+    <div class="col">
+      <input type="text" name="${type}_name" class="form-control" placeholder="${type.charAt(0).toUpperCase() + type.slice(1)} Name">
+    </div>
+    <div class="col">
+      <input type="number" name="${type}_value" class="form-control" placeholder="Value (₹)">
+    </div>
+  `;
+  container.appendChild(row);
 }
 </script>
 {% endblock %}

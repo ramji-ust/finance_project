@@ -1,27 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Retirement Corpus Estimator</h2>
+<div class="container mt-5">
+  <h2 class="mb-4">Retirement Corpus Estimator</h2>
 
-<form method="POST">
+  <form method="POST" class="card p-4 shadow-sm">
     {% csrf_token %}
-    <label for="monthly_savings">Monthly Savings:</label>
-    <input type="number" name="monthly_savings" step="0.01" required><br><br>
 
-    <label for="rate">Annual Interest Rate (%):</label>
-    <input type="number" name="rate" step="0.01" required><br><br>
+    <div class="mb-3">
+      <label for="monthly_savings" class="form-label">Monthly Savings (₹):</label>
+      <input type="number" name="monthly_savings" step="0.01" class="form-control" required>
+    </div>
 
-    <label for="tenure">Tenure (Years):</label>
-    <input type="number" name="tenure" required><br><br>
+    <div class="mb-3">
+      <label for="rate" class="form-label">Annual Interest Rate (%):</label>
+      <input type="number" name="rate" step="0.01" class="form-control" required>
+    </div>
 
-    <input type="submit" value="Estimate Retirement Corpus">
-</form>
+    <div class="mb-3">
+      <label for="tenure" class="form-label">Tenure (Years):</label>
+      <input type="number" name="tenure" class="form-control" required>
+    </div>
 
-{% if result %}
-    <h3>Estimated Retirement Corpus: ₹{{ result }}</h3>
-{% endif %}
+    <button type="submit" class="btn btn-primary w-100">Estimate Retirement Corpus</button>
+  </form>
 
-{% if error %}
-    <p style="color: red;">Error: {{ error }}</p>
-{% endif %}
+  {% if result %}
+    <div class="alert alert-success mt-4">
+      <strong>Estimated Retirement Corpus:</strong> ₹{{ result }}
+    </div>
+  {% endif %}
+
+  {% if error %}
+    <div class="alert alert-danger mt-4">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

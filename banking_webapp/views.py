@@ -12,49 +12,47 @@ import joblib
 import numpy as np
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+import random, string
  
 # ----- AUTHENTICATION -----
- 
+def generate_unique_account_number():
+    while True:
+        account_number = ''.join(random.choices(string.digits, k=10))
+        if not BankAccount.objects.filter(account_number=account_number).exists():
+            return account_number
+
 def register_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
-        account_number = request.POST['account_number']
 
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already taken')
             return render(request, 'auth/register.html')
 
-        if UserProfile.objects.filter(account_number=account_number).exists():
-            messages.error(request, 'Account number already in use')
-            return render(request, 'auth/register.html')
-
+        # Create user
         user = User.objects.create_user(username=username, email=email, password=password)
-        UserProfile.objects.create(user=user, account_number=account_number)
 
-        messages.success(request, 'Registration successful! Please log in.')
+        # Create associated bank account with generated account number
+        account_number = generate_unique_account_number()
+        BankAccount.objects.create(user=user, account_number=account_number, balance=0)
+
+        messages.success(request, f'Registration successful! Your account number is {account_number}. Please log in.')
         return redirect('login')
 
     return render(request, 'auth/register.html')
- 
+
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-        account_number = request.POST['account_number']
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            try:
-                profile = UserProfile.objects.get(user=user)
-                if profile.account_number == account_number:
-                    login(request, user)
-                    return redirect('dashboard_view')
-                else:
-                    messages.error(request, 'Incorrect account number.')
-            except UserProfile.DoesNotExist:
-                messages.error(request, 'User profile not found.')
+            login(request, user)
+            return redirect('dashboard_view')
         else:
             messages.error(request, 'Invalid username or password.')
 
@@ -70,8 +68,11 @@ def logout_view(request):
  
 @login_required(login_url='login')
 def dashboard_view(request):
-    # Get or create the user's bank account
-    account, created = BankAccount.objects.get_or_create(user=request.user)
+    try:
+        account = BankAccount.objects.get(user=request.user)
+    except BankAccount.DoesNotExist:
+        messages.error(request, "No bank account found. Please contact support.")
+        return redirect('logout')  # You can redirect elsewhere if preferred
 
     # Initialize messages and forms
     message = ''

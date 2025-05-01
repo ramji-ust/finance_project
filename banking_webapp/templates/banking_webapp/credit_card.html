@@ -1,32 +1,38 @@
 {% extends 'base.html' %}
- 
+
 {% block content %}
-<h2 class="mb-4">Credit Card Interest Calculator</h2>
- 
-<form method="post" class="card p-4 shadow-sm">
-    {% csrf_token %}
- 
-    <div class="mb-3">
-<label class="form-label">Current Balance (₹):</label>
-<input type="number" name="balance" class="form-control" required>
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Credit Card Interest Calculator</h2>
+
+  <div class="card p-4 shadow-sm">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Current Balance (₹):</label>
+        <input type="number" name="balance" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Annual Interest Rate (%):</label>
+        <input type="number" name="annual_rate" step="0.01" class="form-control" value="24" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Minimum Payment (% of Balance):</label>
+        <input type="number" name="min_payment_percent" step="0.01" class="form-control" value="2" required>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-success">Calculate Final Balance</button>
+      </div>
+    </form>
+  </div>
+
+  {% if result is not None %}
+    <div class="alert alert-warning mt-4">
+      <strong>Estimated Balance After 12 Months:</strong> ₹{{ result }}
+    </div>
+  {% endif %}
 </div>
- 
-    <div class="mb-3">
-<label class="form-label">Annual Interest Rate (%):</label>
-<input type="number" name="annual_rate" step="0.01" class="form-control" value="24" required>
-</div>
- 
-    <div class="mb-3">
-<label class="form-label">Minimum Payment (% of Balance):</label>
-<input type="number" name="min_payment_percent" step="0.01" class="form-control" value="2" required>
-</div>
- 
-    <button type="submit" class="btn btn-primary">Calculate Final Balance</button>
-</form>
- 
-{% if result is not None %}
-<div class="alert alert-warning mt-4">
-<strong>Estimated Balance After 12 Months:</strong> ₹{{ result }}
-</div>
-{% endif %}
 {% endblock %}
