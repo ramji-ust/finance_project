@@ -7,6 +7,11 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import BankAccount, Transaction, UserProfile
+
+import joblib
+import numpy as np
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
  
 # ----- AUTHENTICATION -----
  
@@ -239,3 +244,25 @@ def net_worth_tool(request):
         result = calculate_net_worth(assets, liabilities)
  
     return render(request, 'banking_webapp/net_worth.html', {'result': result})
+
+# Load model
+model = joblib.load("ml_model/loan_model.pkl")
+
+@login_required
+def loan_prediction_view(request):
+    predicted_amount = None
+    if request.method == "POST":
+        try:
+            age = int(request.POST['age'])
+            income = float(request.POST['monthly_income'])
+            score = int(request.POST['credit_score'])
+            tenure = int(request.POST['loan_tenure'])
+            existing = float(request.POST['existing_loan'])
+            dependents = int(request.POST['dependents'])
+
+            features = np.array([[age, income, score, tenure, existing, dependents]])
+            predicted_amount = model.predict(features)[0]
+        except Exception as e:
+            predicted_amount = f"Error: {e}"
+
+    return render(request, "banking_webapp/loan_predictor.html", {"prediction": predicted_amount})

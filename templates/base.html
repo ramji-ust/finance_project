@@ -33,9 +33,10 @@
               <li><a class="dropdown-item" href="{% url 'taxable_income_tool' %}">Taxable Income</a></li>
               <li><a class="dropdown-item" href="{% url 'budget_planner_tool' %}">Budget Planner</a></li>
               <li><a class="dropdown-item" href="{% url 'net_worth_tool' %}">Net Worth Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'predict_loan' %}">Loan Estimator</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
-            </ul>
+            </ul>            
           </li>
         {% else %}
           <!-- Links for Unauthenticated Users -->

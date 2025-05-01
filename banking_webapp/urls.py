@@ -16,5 +16,5 @@ urlpatterns = [
     path('tools/taxable-income/', views.taxable_income_tool, name='taxable_income_tool'),
     path('tools/budget-planner/', views.budget_planner_tool, name='budget_planner_tool'),
     path('tools/net-worth/', views.net_worth_tool, name='net_worth_tool'),
- 
+    path('predict-loan/', views.loan_prediction_view, name='predict_loan'),
 ]
