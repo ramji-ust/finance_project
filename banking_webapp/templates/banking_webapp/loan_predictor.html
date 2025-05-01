@@ -1,19 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Loan Amount Estimator</h2>
-  <form method="post">
+<div class="container mt-5">
+  <h2 class="mb-4">Loan Amount Estimator</h2>
+  <form method="post" class="card p-4 shadow-sm">
     {% csrf_token %}
-    <label>Age:</label><input type="number" name="age" required><br><br>
-    <label>Monthly Income (₹):</label><input type="number" name="monthly_income" required><br><br>
-    <label>Credit Score (300–850):</label><input type="number" name="credit_score" min="300" max="850" required><br><br>
-    <label>Loan Tenure (Years):</label><input type="number" name="loan_tenure" required><br><br>
-    <label>Existing Loan Amount (₹):</label><input type="number" name="existing_loan" required><br><br>
-    <label>Number of Dependents:</label><input type="number" name="dependents" required><br><br>
-    <button type="submit">Estimate</button>
+    
+    <div class="mb-3">
+      <label for="age" class="form-label">Age</label>
+      <input type="number" name="age" id="age" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="monthly_income" class="form-label">Monthly Income (₹)</label>
+      <input type="number" name="monthly_income" id="monthly_income" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="credit_score" class="form-label">Credit Score (300–850)</label>
+      <input type="number" name="credit_score" id="credit_score" class="form-control" min="300" max="850" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="loan_tenure" class="form-label">Loan Tenure (Years)</label>
+      <input type="number" name="loan_tenure" id="loan_tenure" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="existing_loan" class="form-label">Existing Loan Amount (₹)</label>
+      <input type="number" name="existing_loan" id="existing_loan" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="dependents" class="form-label">Number of Dependents</label>
+      <input type="number" name="dependents" id="dependents" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Estimate</button>
   </form>
 
   {% if prediction %}
-    <h3>Predicted Loan Amount: ₹ {{ prediction|floatformat:2 }}</h3>
+    <div class="alert alert-info mt-4">
+      <strong>Predicted Loan Amount:</strong> ₹{{ prediction|floatformat:2 }}
+    </div>
   {% endif %}
+</div>
 {% endblock %}

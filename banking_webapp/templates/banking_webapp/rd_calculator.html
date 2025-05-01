@@ -1,27 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Recurring Deposit Calculator</h2>
+<div class="container mt-5">
+  <h2 class="mb-4">Recurring Deposit Calculator</h2>
 
-<form method="POST">
+  <form method="POST" class="card p-4 shadow-sm">
     {% csrf_token %}
-    <label for="monthly_deposit">Monthly Deposit:</label>
-    <input type="number" name="monthly_deposit" step="0.01" required><br><br>
+    
+    <div class="mb-3">
+      <label for="monthly_deposit" class="form-label">Monthly Deposit (₹):</label>
+      <input type="number" name="monthly_deposit" step="0.01" class="form-control" required>
+    </div>
 
-    <label for="rate">Annual Interest Rate (%):</label>
-    <input type="number" name="rate" step="0.01" required><br><br>
+    <div class="mb-3">
+      <label for="rate" class="form-label">Annual Interest Rate (%):</label>
+      <input type="number" name="rate" step="0.01" class="form-control" required>
+    </div>
 
-    <label for="tenure">Tenure (Years):</label>
-    <input type="number" name="tenure" required><br><br>
+    <div class="mb-3">
+      <label for="tenure" class="form-label">Tenure (Years):</label>
+      <input type="number" name="tenure" class="form-control" required>
+    </div>
 
-    <input type="submit" value="Calculate RD Maturity">
-</form>
+    <button type="submit" class="btn btn-primary w-100">Calculate RD Maturity</button>
+  </form>
 
-{% if result %}
-    <h3>Maturity Value: ₹{{ result }}</h3>
-{% endif %}
+  {% if result %}
+    <div class="alert alert-success mt-4">
+      <strong>Maturity Value:</strong> ₹{{ result }}
+    </div>
+  {% endif %}
 
-{% if error %}
-    <p style="color: red;">Error: {{ error }}</p>
-{% endif %}
+  {% if error %}
+    <div class="alert alert-danger mt-4">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  {% endif %}
+</div>
 {% endblock %}
