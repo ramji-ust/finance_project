@@ -136,3 +136,7 @@ LOGOUT_REDIRECT_URL = 'login'  # After logout
 CSRF_TRUSTED_ORIGINS = [
     "https://us-bank-41cg.onrender.com"
 ]
+
+
+TIME_ZONE = 'Asia/Kolkata'  
+USE_TZ = True 
