@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>US Bank - Finance App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #ffc107 !important;
+    }
+    .navbar {
+      background-color: #00274d;
+    }
+    .card {
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+      border-radius: 0.75rem;
+    }
+    .btn-primary {
+      background-color: #004085;
+      border: none;
+    }
+    .btn-primary:hover {
+      background-color: #002752;
+    }
+    .dropdown-menu {
+      border-radius: 0.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    /* Custom styles for Loan Predictor Icon */
+    .loan-icon {
+      font-size: 1.5rem;
+      color: #ffc107;
+      margin-left: 15px;
+    }
+    .loan-icon:hover {
+      color: #002752;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar: Only show menu for authenticated users, otherwise show login/register -->
+  <nav class="navbar navbar-expand-lg navbar-dark px-4">
+    <a class="navbar-brand" href="{% url 'dashboard_view' %}">US Bank</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+          <!-- Navbar links for authenticated users -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'dashboard_view' %}">Dashboard</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="mainMenuDropdown" role="button" data-bs-toggle="dropdown">
+              Finanace Tools
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{% url 'emi_calculator_view' %}">EMI Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'sip_tool' %}">SIP Tool</a></li>
+              <li><a class="dropdown-item" href="{% url 'fd_calculator_view' %}">FD Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'rd_calculator_view' %}">RD Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'retirement_corpus_view' %}">Retirement Corpus</a></li>
+              <li><a class="dropdown-item" href="{% url 'home_loan_tool' %}">Home Loan Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'credit_card_tool' %}">Credit Card Calculator</a></li>
+              <li><a class="dropdown-item" href="{% url 'taxable_income_tool' %}">Taxable Income</a></li>
+              <li><a class="dropdown-item" href="{% url 'budget_planner_tool' %}">Budget Planner</a></li>
+              <li><a class="dropdown-item" href="{% url 'net_worth_tool' %}">Net Worth Calculator</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
+            </ul>            
+          </li>
+          <!-- Loan Predictor Icon -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'predict_loan' %}">
+              <i class="fas fa-hand-holding-usd loan-icon" title="Loan Predictor"></i>
+            </a>
+          </li>
+        {% else %}
+          <!-- Navbar links for unauthenticated users (login/register) -->
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'register_view' %}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

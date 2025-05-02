@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Simple Budget Planner</h2>
+
+  <div class="card p-4 shadow-sm">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Monthly Income (₹):</label>
+        <input type="number" name="income" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Monthly Expenses (₹):</label>
+        <input type="number" name="expenses" class="form-control" required>
+      </div>
+
+      <div class="d-grid">
+        <button type="submit" class="btn btn-success">Plan Budget</button>
+      </div>
+    </form>
+  </div>
+
+  {% if result %}
+    <div class="alert mt-4 {% if result == 'No surplus to plan savings. Try reducing expenses.' %}alert-danger{% else %}alert-info{% endif %}">
+      {% if result == 'No surplus to plan savings. Try reducing expenses.' %}
+        <strong>{{ result }}</strong>
+      {% else %}
+        <strong>Recommended Plan:</strong><br>
+        Monthly Savings: ₹{{ result.monthly_savings }}<br>
+        Monthly Investments: ₹{{ result.monthly_investments }}
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

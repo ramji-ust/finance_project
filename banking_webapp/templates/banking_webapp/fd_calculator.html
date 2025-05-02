@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Fixed Deposit Calculator</h2>
+
+    <form method="POST" class="card p-4 shadow-sm">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="principal" class="form-label">Principal (₹)</label>
+            <input type="number" name="principal" step="0.01" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="rate" class="form-label">Annual Interest Rate (%)</label>
+            <input type="number" name="rate" step="0.01" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="tenure" class="form-label">Tenure (Years)</label>
+            <input type="number" name="tenure" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Calculate FD Maturity</button>
+    </form>
+
+    {% if result %}
+        <div class="alert alert-success mt-4">
+            <strong>Maturity Amount:</strong> ₹{{ result }}
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="alert alert-danger mt-4">
+            Error: {{ error }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

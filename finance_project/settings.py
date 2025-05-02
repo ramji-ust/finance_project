@@ -25,12 +25,17 @@ SECRET_KEY = 'django-insecure-1y+o98(8og+vi2yf8pi(8s%#_-82*p#_%8)#f=6h%y+s@wia76
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "us-bank-41cg.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'banking_webapp',  # Custom banking app
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,6 +68,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+        'DIRS': [BASE_DIR / 'templates'],  # Add this line
     },
 ]
 
@@ -120,3 +126,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#login settings
+LOGIN_URL = 'login'  # URL name for @login_required redirection
+LOGIN_REDIRECT_URL = 'dashboard'  # After successful login
+LOGOUT_REDIRECT_URL = 'login'  # After logout
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://us-bank-41cg.onrender.com"
+]
+
+
+TIME_ZONE = 'Asia/Kolkata'  
+USE_TZ = True 
