@@ -80,20 +80,25 @@ python manage.py runserver
 
 ```
 finance_project/
-├── banking_webapp/          # Main Django app (views, models, urls, forms)
-│   ├── templates/
-│   │   ├── auth/            # login.html, register.html
-│   │   └── banking_webapp/  # dashboard, calculator templates
-│   └── ...
-├── finance_tools/           # Custom Python module with all financial tools
-│   └── finance_tools.py
-├── ml_model/                # ML model for loan prediction
-│   ├── loan_model.pkl
-│   └── loan_estimator.ipynb
-├── templates/               # base.html
-├── finance_project/         # Django settings and configuration
-├── db.sqlite3               # SQLite database
-├── manage.py                # Django project runner
+├── banking_webapp/ # Main Django app (views, models, urls, forms)
+│ ├── templates/
+│ │ ├── auth/ # login.html, register.html
+│ │ └── banking_webapp/ # dashboard, calculator templates
+│ ├── tests/ # Unit tests for Django app components
+│ │ ├── test_views.py
+│ │ ├── test_urls.py
+│ │ ├── test_models.py
+│ │ └── test_forms.py
+│ └── ...
+├── finance_tools/ # Custom Python module with all financial tools
+│ └── finance_tools.py
+├── ml_model/ # ML model for loan prediction
+│ ├── loan_model.pkl
+│ └── loan_estimator.ipynb
+├── templates/ # base.html
+├── finance_project/ # Django settings and configuration
+├── db.sqlite3 # SQLite database
+├── manage.py # Django project runner
 └── README.md
 
 ```
